@@ -18,20 +18,29 @@
 pip install -r requirements.txt
 ```
 
+### 安装包（开发模式）
+
+```bash
+pip install -e .
+```
+
 ### 运行仿真
 
 ```bash
-# 基础仿真（5架无人机，60秒，启用CBF）
+# 基础仿真（5架无人机，30秒，启用CBF和GP预测）
 python simulations/main_sim.py
 
-# 自定义参数
-python simulations/main_sim. py --agents 8 --time 120 --cbf --auction
+# 对比实验（GP预测场可视化）
+python simulations/comparison_experiment.py
 
-# 无可视化运行
-python simulations/main_sim.py --no-viz
+# 基线 vs 预测对比
+python simulations/baseline_vs_predictive.py
 
-# 保存动画
-python simulations/main_sim.py --save-anim
+# 预测驱动仿真
+python simulations/prediction_driven_sim.py
+
+# 框架测试
+python tests/test_framework.py
 ```
 
 ### 命令行参数
@@ -50,30 +59,56 @@ python simulations/main_sim.py --save-anim
 ## 📁 项目结构
 
 ```
-multi_uav_coverage/
-├── config/
-│   └── params.yaml              # 配置参数
-├── src/
-│   ├── environment/
-│   │   └── sensitivity_field.py # 动态敏感度场
-│   ├── prediction/
-│   │   └── gp_predictor.py      # 高斯过程预测
-│   ├── coverage/
-│   │   ├── voronoi. py           # Voronoi分割
-│   │   └── lloyd_controller.py  # 覆盖控制器
-│   ├── safety/
-│   │   ├── cbf.py               # CBF安全滤波
-│   │   └── mpc_controller.py    # MPC控制
-│   ├── allocation/
-│   │   └── auction. py           # 拍卖算法
-│   ├── agents/
-│   │   └── uav.py               # 无人机智能体
-│   └── utils/
-│       └── visualization.py     # 可视化工具
-├── simulations/
-│   └── main_sim.py              # 主仿真入口
+dynamic_coverage/
+├── README.md
 ├── requirements.txt
-└── README.md
+├── setup.py                          # 包安装配置
+├── .gitignore
+│
+├── config/
+│   └── params.yaml                   # 配置参数
+│
+├── src/
+│   ├── __init__.py
+│   ├── environment/
+│   │   ├── __init__.py
+│   │   ├── sensitivity_field.py      # 动态敏感度场（含 MotionType 枚举）
+│   │   └── obstacles.py              # 障碍物环境
+│   ├── prediction/
+│   │   ├── __init__.py
+│   │   └── gp_predictor.py           # 高斯过程预测
+│   ├── coverage/
+│   │   ├── __init__.py
+│   │   ├── voronoi.py                # Voronoi 分割
+│   │   ├── lloyd_controller.py       # Lloyd 覆盖控制器
+│   │   └── coverage_controllers.py   # 改进版控制器（含 Reactive + Predictive）
+│   ├── safety/
+│   │   ├── __init__.py
+│   │   ├── cbf.py                    # CBF 安全约束
+│   │   └── mpc_controller.py         # MPC 控制
+│   ├── allocation/
+│   │   ├── __init__.py
+│   │   └── auction.py                # 拍卖算法（CBBA）
+│   ├── agents/
+│   │   ├── __init__.py
+│   │   └── uav.py                    # 无人机智能体
+│   └── utils/
+│       ├── __init__.py
+│       └── visualization.py          # 可视化工具
+│
+├── simulations/
+│   ├── __init__.py
+│   ├── main_sim.py                   # 主仿真入口
+│   ├── comparison_experiment.py      # GP 预测可视化对比实验
+│   ├── baseline_vs_predictive.py     # 基线 vs 预测对比仿真
+│   └── prediction_driven_sim.py      # 预测驱动仿真
+│
+├── tests/
+│   ├── __init__.py
+│   └── test_framework.py             # 框架测试脚本
+│
+└── output/
+    └── .gitkeep
 ```
 
 ## 🔧 核心算法
