@@ -1,0 +1,38 @@
+# 仿真参数配置
+simulation:
+  dt: 0.1                    # 时间步长 (s)
+  total_time: 100.0           # 总仿真时间 (s)
+  domain:
+    x_min: 0.0
+    x_max: 100.0
+    y_min: 0.0
+    y_max: 100.0
+
+# 无人机参数
+uav:
+  num_agents: 5
+  max_velocity: 5.0          # m/s
+  safe_distance: 3.0         # 最小安全距离 (m)
+  sensing_radius: 15.0       # 感知半径 (m)
+
+# 高斯过程参数
+gp:
+  kernel: "rbf"
+  length_scale: 10.0
+  noise_variance: 0.1
+  prediction_horizon: 10     # 预测步数
+
+# MPC参数
+mpc:
+  horizon: 20
+  Q: [1.0, 1.0]               # 状态权重
+  R: [0.1, 0.1]              # 控制权重
+
+# CBF参数
+cbf:
+  gamma: 1.0                 # CBF class-K函数参数
+
+# 拍卖算法参数
+auction:
+  max_iterations: 50
+  epsilon: 0.01
